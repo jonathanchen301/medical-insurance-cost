@@ -1,20 +1,46 @@
+import torch
+from torch.utils.data import Dataset, DataLoader
 import pandas as pd
-from sklearn.model_selection import train_test_split
 
-dataset = pd.read_csv("data/insurance.csv")
 
-dataset["sex"].replace({"male": 0, "female": 1}, inplace=True)
-dataset["smoker"].replace({"yes": 1, "no": 0}, inplace=True)
-dataset["region"].replace(
-    {"southwest": 0, "southeast": 1, "northwest": 2, "northeast": 3}
-)
+class InsuranceDataset(Dataset):
 
-X = dataset.iloc[:, :-1]
-y = dataset.iloc[:, -1]
+    def __init__(self, root, transform=None):
+        # Data Loading
+        dataset = pd.read_csv(root)
+        self.nsamples = dataset.shape[0]
+        self.transform = transform
+        self.X = dataset.iloc[:, :-1]
+        self.y = dataset.iloc[:, -1]
 
-X_train, X_temp, y_train, y_temp = train_test_split(
-    X, y, test_size=0.2, random_state=42
-)
-X_dev, X_test, y_dev, y_test = train_test_split(
-    X_temp, y_temp, test_size=0.5, random_state=42
-)
+    def __getitem__(self, index):
+        # Allow indexing (dataset[0])
+        sample = (self.X.iloc[index, :], self.y.iloc[index])
+
+        if self.transform:
+            sample = self.transform(sample)
+
+        return sample
+
+    def __len__(self):
+        return self.nsamples
+
+
+class EncodingToTensor:
+    def __call__(self, sample):
+        x_copy = sample[0].copy()
+        x_copy.replace(
+            {
+                "male": 0,
+                "female": 1,
+                "no": 0,
+                "yes": 1,
+                "southwest": 0,
+                "southeast": 1,
+                "northwest": 2,
+                "northeast": 3,
+            },
+            inplace=True,
+        )
+
+        return torch.tensor(x_copy), torch.tensor(sample[1])
