@@ -1,5 +1,18 @@
 from dataset import *
 from sklearn.model_selection import train_test_split
+import wandb
+
+# wandb.init(
+#     # set the wandb project where this run will be logged
+#     project="my-awesome-project",
+#     # track hyperparameters and run metadata
+#     config={
+#         "learning_rate": 0.01,
+#         "architecture": "Linear Regression",
+#         "dataset": "insurance.csv",
+#         "epochs": 10,
+#     },
+# )
 
 # 80-10-10 split
 

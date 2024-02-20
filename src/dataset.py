@@ -6,7 +6,6 @@ import pandas as pd
 class InsuranceDataset(Dataset):
 
     def __init__(self, root, transform=None):
-        # Data Loading
         dataset = pd.read_csv(root)
         self.nsamples = dataset.shape[0]
         self.transform = transform
@@ -14,7 +13,6 @@ class InsuranceDataset(Dataset):
         self.y = dataset.iloc[:, -1]
 
     def __getitem__(self, index):
-        # Allow indexing (dataset[0])
         sample = (self.X.iloc[index, :], self.y.iloc[index])
 
         if self.transform:
