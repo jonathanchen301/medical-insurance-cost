@@ -2,15 +2,16 @@ from dataset import *
 from model import *
 from sklearn.model_selection import train_test_split
 
-# wandb.init(
-#     project="medical-insurance",
-#     config={
-#         "learning_rate": 0.0001,
-#         "architecture": "Linear Regression",
-#         "dataset": "insurance.csv",
-#         "epochs": 200,
-#     },
-# )
+wandb.init(
+    project="medical-insurance",
+    config={
+        "learning_rate": 0.0001,
+        "architecture": "Linear Regression",
+        "optimizer": "Stochastic Gradient Descent",
+        "dataset": "insurance.csv",
+        "epochs": 200,
+    },
+)
 
 dataset = InsuranceDataset("data/insurance.csv", transform=EncodingToTensor())
 
@@ -26,7 +27,8 @@ num_epochs = 200
 
 model = LinearRegression(next(iter(train_dataloader))[0].size(1))
 optimizer = torch.optim.SGD(model.parameters(), lr=lr)
-loss_ft = torch.nn.MSELoss()
+# optimizer = torch.optim.Adam(model.parameters(), lr=lr)
+loss_fct = torch.nn.MSELoss()
 
-model.learn(train_dataloader, dev_dataloader, num_epochs, optimizer, loss_ft)
-model.evaluate(test_dataloader, loss_ft)
+model.learn(train_dataloader, dev_dataloader, num_epochs, optimizer, loss_fct)
+model.evaluate(test_dataloader, loss_fct, output_csv='./predictions.csv')

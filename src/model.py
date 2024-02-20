@@ -1,6 +1,7 @@
 import torch
 import torch.nn as nn
 import wandb
+import csv
 
 
 class LinearRegression(nn.Module):
@@ -10,7 +11,7 @@ class LinearRegression(nn.Module):
         self.linear = nn.Linear(feature_size, 1)
 
     def forward(self, x):
-        return self.linear(x)
+        return self.linear.forward(x)
 
     def predict(self, x):
         with torch.no_grad():
@@ -38,21 +39,32 @@ class LinearRegression(nn.Module):
                 total_dev_loss += loss.item() * batch_X.size(0)
             dev_loss = total_dev_loss / len(dev_dataloader.dataset)
 
-            # wandb.log({"train_loss": train_loss, "dev_loss": dev_loss})
+            wandb.log({"train_loss": train_loss, "dev_loss": dev_loss})
 
             print("Train Loss: " + str(train_loss) + " | Dev Loss: " + str(dev_loss))
 
-    def evaluate(self, test_dataloader, loss_fct):
+    def evaluate(self, test_dataloader, loss_fct, output_csv=None):
 
         print("Evaluating Model On Test Set")
 
         total_test_loss = 0.0
+        all_predictions = []
+        all_labels = []
+
         for batch_X, batch_y in test_dataloader:
             predictions = self.predict(batch_X)
             loss = loss_fct(predictions, batch_y)
             total_test_loss += loss.item() * batch_X.size(0)
+
+            all_predictions.extend(predictions.tolist())
+            all_labels.extend(batch_y.tolist())
         test_loss = total_test_loss / len(test_dataloader.dataset)
 
         print("Test Loss: " + str(test_loss))
 
-        return test_loss
+        if output_csv:
+            with open(output_csv, 'w', newline='') as csvfile:
+                writer = csv.writer(csvfile)
+                writer.writerow(['Prediction', 'Actual'])
+                for pred, actual in zip(all_predictions, all_labels):
+                    writer.writerow([pred[0], actual])
