@@ -41,4 +41,6 @@ class EncodingToTensor:
             inplace=True,
         )
 
-        return torch.tensor(x_copy), torch.tensor(sample[1])
+        return torch.tensor(x_copy, dtype=torch.float32), torch.tensor(
+            sample[1], dtype=torch.float32
+        )
