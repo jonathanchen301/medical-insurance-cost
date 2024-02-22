@@ -5,11 +5,13 @@ from sklearn.model_selection import train_test_split
 wandb.init(
     project="medical-insurance",
     config={
-        "learning_rate": 0.0001,
-        "architecture": "Linear Regression",
-        "optimizer": "Stochastic Gradient Descent",
+        "learning_rate": 0.01,
+        "architecture": "Multilayer Perceptron",
+        # "optimizer": "Stochastic Gradient Descent",
+        "optimizer": "ADAM",
         "dataset": "insurance.csv",
-        "epochs": 200,
+        "epochs": 1000,
+        "hidden_dims": 64,
     },
 )
 
@@ -22,13 +24,17 @@ train_dataloader = DataLoader(train_data, batch_size=1, shuffle=False)
 dev_dataloader = DataLoader(dev_data, batch_size=1, shuffle=False)
 test_dataloader = DataLoader(test_data, batch_size=1, shuffle=False)
 
-lr = 0.0001
-num_epochs = 200
+lr = 0.01
+hidden_dims = 64
+num_epochs = 1000
 
-model = LinearRegression(next(iter(train_dataloader))[0].size(1))
-optimizer = torch.optim.SGD(model.parameters(), lr=lr)
-# optimizer = torch.optim.Adam(model.parameters(), lr=lr)
+# model = LinearRegression(next(iter(train_dataloader))[0].size(1))
+model = MultilayerPerceptron(
+    next(iter(train_dataloader))[0].size(1), hidden_dims=hidden_dims
+)
+# optimizer = torch.optim.SGD(model.parameters(), lr=lr)
+optimizer = torch.optim.Adam(model.parameters(), lr=lr)
 loss_fct = torch.nn.MSELoss()
 
 model.learn(train_dataloader, dev_dataloader, num_epochs, optimizer, loss_fct)
-model.evaluate(test_dataloader, loss_fct, output_csv='./predictions.csv')
+model.evaluate(test_dataloader, loss_fct, output_csv="./predictions.csv")
