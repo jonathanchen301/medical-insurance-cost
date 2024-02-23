@@ -2,19 +2,6 @@ from dataset import *
 from model import *
 from sklearn.model_selection import train_test_split
 
-wandb.init(
-    project="medical-insurance",
-    config={
-        "learning_rate": 0.01,
-        "architecture": "Multilayer Perceptron",
-        # "optimizer": "Stochastic Gradient Descent",
-        "optimizer": "ADAM",
-        "dataset": "insurance.csv",
-        "epochs": 1000,
-        "hidden_dims": 64,
-    },
-)
-
 dataset = InsuranceDataset("data/insurance.csv", transform=EncodingToTensor())
 
 train_data, test_data = train_test_split(dataset, test_size=0.2, random_state=42)
@@ -32,7 +19,7 @@ num_epochs = 1000
 model = MultilayerPerceptron(
     next(iter(train_dataloader))[0].size(1), hidden_dims=hidden_dims
 )
-# optimizer = torch.optim.SGD(model.parameters(), lr=lr)
+optimizer = torch.optim.SGD(model.parameters(), lr=lr)
 optimizer = torch.optim.Adam(model.parameters(), lr=lr)
 loss_fct = torch.nn.MSELoss()
 

@@ -1,6 +1,5 @@
 import torch
 import torch.nn as nn
-import wandb
 import csv
 
 
@@ -38,8 +37,6 @@ class LinearRegression(nn.Module):
                 loss = loss_fct(predictions, batch_y)
                 total_dev_loss += loss.item() * batch_X.size(0)
             dev_loss = total_dev_loss / len(dev_dataloader.dataset)
-
-            wandb.log({"train_loss": train_loss, "dev_loss": dev_loss})
 
             print("Train Loss: " + str(train_loss) + " | Dev Loss: " + str(dev_loss))
 
@@ -112,8 +109,6 @@ class MultilayerPerceptron(nn.Module):
                 loss = loss_fct(predictions, batch_y)
                 total_dev_loss += loss.item() * batch_X.size(0)
             dev_loss = total_dev_loss / len(dev_dataloader.dataset)
-
-            wandb.log({"train_loss": train_loss, "dev_loss": dev_loss})
 
             print("Train Loss: " + str(train_loss) + " | Dev Loss: " + str(dev_loss))
 

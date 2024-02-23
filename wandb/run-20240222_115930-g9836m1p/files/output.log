@@ -1,6 +1,0 @@
-/Users/jonathan/projects/medical_insurance_cost/src/dataset.py:44: FutureWarning: Series.__getitem__ treating keys as positions is deprecated. In a future version, integer keys will always be treated as labels (consistent with DataFrame behavior). To access a value by position, use `ser.iloc[pos]`
-  return torch.tensor(x_copy, dtype=torch.float32), torch.tensor(
-Traceback (most recent call last):
-  File "/Users/jonathan/projects/medical_insurance_cost/src/train.py", line 29, in <module>
-    model = MultilayerPerceptron(next(iter(train_dataloader))[0].size(1))
-TypeError: MultilayerPerceptron.__init__() missing 1 required positional argument: 'hidden_dims'
