@@ -1,4 +1,4 @@
-# medical_insurance_cost
+# medical-insurance-cost
 
 ## Purpose
 
