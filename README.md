@@ -45,3 +45,8 @@ important factors that contribute to the insurance cost. Some other factors incl
 factors aside from smoking, type of insurance plan, family size aside from children, economic factors such as inflation.
 
 Without these other features, we can see that similar data points have very different medical costs, so certain outliers were not accurately predicted using my model.
+
+## Next Steps
+
+Create a full-stack website that gives users a initial estimate on their medical insurance costs based only on a few factors: age, sex, bmi, # of children, if they are a smoker or not,
+and region of residence.
